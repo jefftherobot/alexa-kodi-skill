@@ -1,3 +1,4 @@
+var request = require('request');
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
@@ -112,15 +113,31 @@ function playMovie(intent, session, callback) {
 
 	if (movieTitleSlot) {
 		var movieTitle = movieTitleSlot.value;
-		//sessionAttributes = createFavoriteColorAttributes(favoriteColor);
+
+		request({
+			url: 'http://jefftherobot.com:3000/movie', //URL to hit
+			qs: {title: movieTitleSlot.value}, //Query string data
+			method: 'GET',
+		}, function(error, response, body){
+			if(error) {
+				console.log(error);
+				speechOutput = "There was an error playing " + movieTitle;
+			} else {
+				console.log(response.statusCode, body);
+				speechOutput = JSON.parse(body).message;
+				repromptText = JSON.parse(body).reprompt;
+			callback(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+		});
+
+		/*//sessionAttributes = createFavoriteColorAttributes(favoriteColor);
 		speechOutput = "Playing " + movieTitle;
 		repromptText = "You can ask me what movie you want to watch by saying, watch and then the movie title";
 	} else {
 		speechOutput = "I can't find that movie. Please try again";
-		repromptText = "I can't find that movie. You can ask me what movie you want to watch by saying, watch and then the movie title";
+		repromptText = "I can't find that movie. You can ask me what movie you want to watch by saying, watch and then the movie title";*/
 	}
 
-	callback(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+	
 }
 
 // --------------- Helpers that build all of the responses -----------------------
