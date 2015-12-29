@@ -13,7 +13,7 @@ var appRouter = function(app, wol, Kodi) {
 			case 'on':
 				res.json({ message: 'Turning T.V. on' }); 
 				console.log('turning tv on...')
-				wol.wake('80:EE:73:63:F0:5A'{ address: '192.168.0.255'});
+				wol.wake('80:EE:73:63:F0:5A',{ address: '192.168.0.255'});
 				break;
 			case 'off':
 				res.json({ message: 'Turning T.V. off' }); 
