@@ -1,0 +1,9 @@
+{
+  "intents": [{
+      "intent": "Movie",
+       "slots": [{
+          "name": "MovieTitle",
+          "type": "AMAZON.LITERAL"
+        }]
+    }]
+ }

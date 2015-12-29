@@ -1,0 +1,16 @@
+{
+  "name": "kodi-api",
+  "version": "1.0.0",
+  "description": "Kodi api for alexa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "kodi-rpc": "^1.0.0",
+    "wake_on_lan": "0.0.4"
+  }
+}
