@@ -1,7 +1,7 @@
 var appRouter = function(app, wol, Kodi) {
 
 	var kodi = new Kodi('192.168.0.175', '80');
-	
+
 	app.get("/", function(req, res) {
 		res.send("Welcome to kodi");
 	});
@@ -13,7 +13,7 @@ var appRouter = function(app, wol, Kodi) {
 			case 'on':
 				res.json({ message: 'Turning T.V. on' }); 
 				console.log('turning tv on...')
-				wol.wake('80:EE:73:63:F0:5A',{ address: '192.168.0.255'});
+				wake_kodi();
 				break;
 			case 'off':
 				res.json({ message: 'Turning T.V. off' }); 
@@ -34,14 +34,17 @@ var appRouter = function(app, wol, Kodi) {
 	app.get("/movie", function(req, res) {
 		var movieTitle = req.query.title;
 
+
 		kodi.VideoLibrary.GetMovies()
 			.then(function(movies) {
+
 				if(!(movies && movies.result && movies.result.movies && movies.result.movies.length > 0)) {
 					res.json({ message: 'I can\'t seem to retrieve a movie listing' }); 
 				}
 
 				var movie = movies.result.movies.reduce(function(result, item) {
-					return result ? result : (movieTitle === item.label.toLowerCase() ? item : null);
+					var label = item.label.toLowerCase().replace(/[&\/\\#,+\-()$~%.'":*?<>{}]/g, '')
+					return result ? result : (movieTitle === label ? item : null);
 				}, null);
 
 				if(movie) {
@@ -57,10 +60,14 @@ var appRouter = function(app, wol, Kodi) {
 			.catch(function(e) {
 				console.log(e);
 				res.json({ message: 'I can\'t seem to connect to Kodi. Let me try and turn the T.V on.' });
-				wol.wake('80:EE:73:63:F0:5A');
+				wake_kodi();
 			});
 
 	});
+
+	function wake_kodi(){
+		wol.wake('80:EE:73:63:F0:5A',{ address: '192.168.0.255'});
+	}
 }
  
 module.exports = appRouter;
