@@ -73,6 +73,8 @@ function onIntent(intentRequest, session, callback) {
 	// Dispatch to your skill's intent handlers
 	if ("Movie" === intentName) {
 		playMovie(intent, session, callback);
+	} else if ("Shows" === intentName) {
+		playShow(intent, session, callback);
 	} else if ("AMAZON.HelpIntent" === intentName) {
 		getWelcomeResponse(callback);
 	} else {
@@ -122,19 +124,46 @@ function playMovie(intent, session, callback) {
 			if(error) {
 				console.log(error);
 				speechOutput = "There was an error playing " + movieTitle;
+				repromptText = "I can't find that movie. You can ask me what movie you want to watch by saying, watch and then the movie title";
 			} else {
 				console.log(response.statusCode, body);
 				speechOutput = JSON.parse(body).message;
 				repromptText = JSON.parse(body).reprompt;
+			}
 			callback(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
 		});
+	}
 
-		/*//sessionAttributes = createFavoriteColorAttributes(favoriteColor);
-		speechOutput = "Playing " + movieTitle;
-		repromptText = "You can ask me what movie you want to watch by saying, watch and then the movie title";
-	} else {
-		speechOutput = "I can't find that movie. Please try again";
-		repromptText = "I can't find that movie. You can ask me what movie you want to watch by saying, watch and then the movie title";*/
+	
+}
+
+function playShow(intent, session, callback) {
+	var cardTitle = intent.name,
+	    showTitleSlot = intent.slots.ShowTitle,
+	    repromptText = "",
+	    sessionAttributes = {},
+	    shouldEndSession = true,
+	    speechOutput = "";
+
+	if (showTitleSlot) {
+		var showTitle = showTitle.value;
+
+		request({
+			url: 'http://jefftherobot.com:3000/show', //URL to hit
+			qs: {title: showTitleSlot.value}, //Query string data
+			method: 'GET',
+		}, function(error, response, body){
+			if(error) {
+				console.log(error);
+				speechOutput = "There was an error playing " + showTitle;
+				repromptText = "I can't find that movie. You can ask me what movie you want to watch by saying, watch and then the movie title";
+			} else {
+				console.log(response.statusCode, body);
+				speechOutput = JSON.parse(body).message;
+				repromptText = JSON.parse(body).reprompt;
+			}
+			callback(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+		});
 	}
 
 	
