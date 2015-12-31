@@ -149,7 +149,7 @@ function playShow(intent, session, callback) {
 		var showTitle = showTitle.value;
 
 		request({
-			url: 'http://jefftherobot.com:3000/show', //URL to hit
+			url: 'http://jefftherobot.com:3000/tvshow', //URL to hit
 			qs: {title: showTitleSlot.value}, //Query string data
 			method: 'GET',
 		}, function(error, response, body){
