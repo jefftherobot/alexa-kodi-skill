@@ -19,7 +19,7 @@ var actions = {
 module.exports = function(kodi) {
 	return {
 		action: function(req, res) {
-			var action = req.query.action;
+			var action = req.params.action;
 			if(actions[action]){
 				actions[action](res);
 			}else{

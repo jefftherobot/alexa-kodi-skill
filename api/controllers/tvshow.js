@@ -1,7 +1,7 @@
 module.exports = function(kodi) {
 	return {
 		findByTitle: function(req, res) {
-			var tvshowTitle = req.query.title;
+			var tvshowTitle = req.params.title;
 			console.log(tvshowTitle)
 		}
 	}
