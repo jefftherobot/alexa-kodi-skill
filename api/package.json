@@ -12,5 +12,8 @@
     "express": "^4.13.3",
     "kodi-rpc": "^1.0.0",
     "wake_on_lan": "0.0.4"
+  },
+  "devDependencies": {
+    "node-monkey": "^0.2.16"
   }
 }
