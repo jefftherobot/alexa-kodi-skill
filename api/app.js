@@ -1,9 +1,8 @@
 var express = require("express"),
-    wol = require('wake_on_lan'),
     Kodi = require('kodi-rpc'),
     app = express(),
     kodi = new Kodi('192.168.0.239', '80'),
-    routes = require("./routes/routes.js")(app, wol, kodi);
+    routes = require("./routes/routes.js")(app, kodi);
 
 var nomo = require('node-monkey').start();
 

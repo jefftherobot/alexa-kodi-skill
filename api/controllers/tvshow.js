@@ -1,8 +1,8 @@
 module.exports = function(kodi) {
 	return {
 		findByTitle: function(req, res) {
-			var movieTitle = req.query.title;
-			console.log(movieTitle)
+			var tvshowTitle = req.query.title;
+			console.log(tvshowTitle)
 		}
 	}
 }

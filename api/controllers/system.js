@@ -1,3 +1,5 @@
+var wol = require('wake_on_lan');
+
 var actions = {
 	on : function(res){
 		res.json({ message: 'Turning T.V. on' });
@@ -14,11 +16,15 @@ var actions = {
 }
 
 
-exports.action = function(req, res) {
-	var action = req.query.action;
-	if(actions[action]){
-		actions[action](res);
-	}else{
-		res.json({ message: 'System command not found' });
+module.exports = function(kodi) {
+	return {
+		action: function(req, res) {
+			var action = req.query.action;
+			if(actions[action]){
+				actions[action](res);
+			}else{
+				res.json({ message: 'System command not found' });
+			}
+		}
 	}
-};
+}
