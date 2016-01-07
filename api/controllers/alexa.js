@@ -18,7 +18,15 @@ var requestType = {
 	 * Called when the user specifies an intent for this skill.
 	 */
 	IntentRequest: function(req, res){
-		console.log('IntentRequest')
+		console.log('IntentRequest');
+
+		var intent = req.body.request.intent;
+
+		if(intents[intent.name]){
+			intents[intent.name](intent);
+		}else{
+			res.json({ message: 'Request type not found' });
+		}
 	},
 
 	/**
@@ -27,6 +35,21 @@ var requestType = {
 	 */
 	SessionEndedRequest : function(req, res){
 		console.log('SessionEndedRequest.')
+	}
+}
+
+var intents = {
+	Movie : function(intent){
+		var movieTitle = intent.slots.MovieTitle.value
+		console.log('play movie '+ movieTitle)
+	},
+	TVShows : function(intent){
+		var showTitle = intent.slots.TVShowTitle.value
+		console.log('play tv show'+showTitle)
+	},
+	'AMAZON.HelpIntent' : function(intent){
+		var response = getWelcomeResponse();
+		res.json(response);
 	}
 }
 
