@@ -1,6 +1,6 @@
 var appRouter = function(app, kodi) {
 	var system = require('../controllers/system.js')(kodi);
-	var alexa = require('../controllers/alexa.js')(kodi);
+	var alexa = require('../services/alexa.js')(kodi);
 
 	app.post("/alexa", alexa.init);
 	app.get("/system/:action", system.action);
