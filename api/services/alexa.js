@@ -1,9 +1,8 @@
 //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Examples
 //https://github.com/rsummers618/HTPC_Alexa_Skill
 // /https://github.com/m0ngr31/kodi-alexa
-var kodi;
-var movie = require('../controllers/movie.js')(kodi);
-var tvshow = require('../controllers/tvshow.js')(kodi);
+var movieController;
+var tvshowController;
 
 var requestType = {
 	/**
@@ -48,13 +47,11 @@ var intents = {
 		var movieTitle = intent.slots.MovieTitle.value,
 		    sessionAttributes = {},
 		    cardTitle = "Kodi",
-		    speechOutput = "Playing movie ",
 		    repromptText = "Please tell me the movie you would like to watch.",
 		    shouldEndSession = false;
 
-		movie.findByTitle(movieTitle, function(foundTitle){
-			speechOutput += foundTitle;
-			shouldEndSession=true;
+		movieController.findByTitle(movieTitle, function(speechOutput){
+			//shouldEndSession=true;
 			var response = buildResponse(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession) )
 			res.json(response);
 		});
@@ -68,7 +65,7 @@ var intents = {
 		    repromptText = "Please tell me the show you would like to watch.",
 		    shouldEndSession = false;
 
-		tvshow.findByTitle(showTitle, function(foundTitle){
+		tvshowController.findByTitle(showTitle, function(foundTitle){
 			speechOutput += foundTitle;
 			shouldEndSession=true;
 			var response = buildResponse(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession) )
@@ -131,9 +128,11 @@ function buildResponse(sessionAttributes, speechletResponse) {
 module.exports = function(kodi) {
 	return {
 		init: function(req, res) {
-			kodi = kodi;
-			var type = req.body.request.type;
 
+			movieController = require('../controllers/movie.js')(kodi);
+			tvshowController = require('../controllers/tvshow.js')(kodi);
+
+			var type = req.body.request.type;
 			if(requestType[type]){
 				requestType[type](req, res);
 			}else{
