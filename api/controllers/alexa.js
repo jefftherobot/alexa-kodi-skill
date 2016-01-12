@@ -1,4 +1,6 @@
 //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Examples
+//https://github.com/rsummers618/HTPC_Alexa_Skill
+// /https://github.com/m0ngr31/kodi-alexa
 var kodi;
 var movie = require('../controllers/movie.js')(kodi);
 var tvshow = require('../controllers/tvshow.js')(kodi);
@@ -58,9 +60,20 @@ var intents = {
 		});
 	},
 
-	TVShows : function(intent){
-		var showTitle = intent.slots.TVShowTitle.value
-		console.log('play tv show'+showTitle)
+	TVShow : function(intent, res){
+		var showTitle = intent.slots.TVShowTitle.value,
+		    sessionAttributes = {},
+		    cardTitle = "Kodi",
+		    speechOutput = "Playing show ",
+		    repromptText = "Please tell me the show you would like to watch.",
+		    shouldEndSession = false;
+
+		tvshow.findByTitle(showTitle, function(foundTitle){
+			speechOutput += foundTitle;
+			shouldEndSession=true;
+			var response = buildResponse(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession) )
+			res.json(response);
+		});
 	},
 
 	'AMAZON.HelpIntent' : function(intent){
