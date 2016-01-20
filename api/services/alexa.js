@@ -51,7 +51,7 @@ var intents = {
 		    shouldEndSession = false;
 
 		movieController.findByTitle(movieTitle, function(speechOutput){
-			//shouldEndSession=true;
+			shouldEndSession=true;
 			var response = buildResponse(sessionAttributes,buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession) )
 			res.json(response);
 		});
