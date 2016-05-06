@@ -20,14 +20,15 @@ var actions = {
 
 
 function wake_kodi(){
-	wol.wake('80:EE:73:63:F0:5A',{ address: '192.168.0.255'});
+	var mac = process.env.KODI_MAC;
+	
+	wol.wake(mac,{ address: '192.168.0.255'});
 }
 
 
 module.exports = function(kodi) {
 	return {
 		action: function(req, res) {
-			console.log(kodi)
 			var action = req.params.action;
 			if(actions[action]){
 				actions[action](res, kodi);
