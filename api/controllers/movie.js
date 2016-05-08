@@ -4,7 +4,6 @@ google.resultsPerPage = 5;
 module.exports = function(kodi) {
 	return {
 		findByTitle: function(movieTitle, callback) {
-			var foundTitle = movieTitle;
 			
 			kodi.VideoLibrary.GetMovies({'properties':['imdbnumber']})
 			.then(function(movies) {
@@ -39,10 +38,10 @@ module.exports = function(kodi) {
 							kodi.Player.Open({item: { movieid: movie.movieid }});
 							callback("Playing "+movie.label)
 						}else{
-							//pulsar
+							//quasar
 							var label = firstResult.title.split(/[ ]\(.*/)[0]
-							kodi.Player.Open({item: {"file":"plugin://plugin.video.pulsar/movie/tt"+IMDBid+"/play"}})
-							callback("Playing "+label+" with pulsar.")
+							kodi.Player.Open({item: {"file":"plugin://plugin.video.quasar/movie/tt"+IMDBid+"/play"}})
+							callback("Playing "+label+" with quasar.")
 						}
 					})
 				}

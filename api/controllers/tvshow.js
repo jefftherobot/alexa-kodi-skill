@@ -1,24 +1,27 @@
 var google = require('google')
 google.resultsPerPage = 5;
 
-function playEpisodes(kodi,id){
+function addEpisodesToPlaylist(kodi,id){
 		kodi.VideoLibrary.GetEpisodes({ 'tvshowid': id, 'limits': { 'start' : 0, 'end': 30 }, 'sort': { 'order': 'ascending', 'method': 'random'} })
-		.then(function(eps) {
+		.then(function(data) {
+
+			//console.log(data)
+			var counter = 0;
 
 			kodi.Playlist.Clear({playlistid:1})
 
-			eps.result.episodes.forEach(function(ep) {
-				kodi.Playlist.Add({playlistid:1, item:{episodeid:ep.episodeid}}).then(function(i){
-					success++;
+			data.result.episodes.forEach(function(ep, i) {
+				kodi.Playlist.Add({playlistid:1, item:{episodeid:ep.episodeid}}).then(function(item){
+					counter++;
+					if(counter==30){
+						kodi.Player.Open({item: { playlistid: 1 }});
+						kodi.Playlist.GetItems({playlistid:1}).then(function(items){
+							console.log(items)
+						})
+					}
+					
 				})
 			})
-
-			setTimeout(function(){
-				kodi.Player.Open({item: { playlistid: 1 }});
-				kodi.Playlist.GetItems({playlistid:1}).then(function(items){
-				//console.log(items)
-			})
-			},500)
 
 		})
 	}
@@ -26,9 +29,8 @@ function playEpisodes(kodi,id){
 module.exports = function(kodi) {
 	return {
 		findByTitle: function(tvshowTitle, callback) {
-			var foundTitle = movieTitle;
 
-			kodi.VideoLibrary.GetTVShows({'properties':['seriesid']})
+			kodi.VideoLibrary.GetTVShows({'properties':['imdbnumber']})
 			.then(function(tvshows) {
 
 				if(!(tvshows && tvshows.result && tvshows.result.tvshows && tvshows.result.tvshows.length > 0)) {
@@ -43,34 +45,42 @@ module.exports = function(kodi) {
 					return result ? result : (tvshowTitle === label ? item : null);
 				}, null);
 
+				console.log(tvshow)
 
-				if(tvshowTitle){
-					playEpisodes(tvshow.tvshowid)
+
+				if(tvshow){
+					addEpisodesToPlaylist(kodi, tvshow.tvshowid)
 					callback('Ok. Playing random episodes from '+tvshow.label)
 				}else{
 					//try google
 					google('site:thetvdb.com '+tvshowTitle, function (err, next, links){
-						var firstResult = links[0];
-						var TVDBID = firstResult.link.split(/\?id=([0-9]+)/)[1]
+						var firstResult = links[0],
+						    TVDBID = firstResult.link.split(/\id=([0-9]+)/)[1]
 
-						tvshow = tvshow.result.tvshow.reduce(function(resultseriesiditem) {
-							return result ? result : (TVDBID=== item.seriesid ? item : null);
+						//console.log(links);
+						//console.log(TVDBID);
+
+						tvshow = tvshows.result.tvshows.reduce(function(result, item) {
+							return result ? result : (TVDBID == item.imdbnumber ? item : null);
 						}, null);
 
+						console.log(tvshow)
+
 						if(tvshow){
-							playEpisodes(tvshow.tvshowid)
+							addEpisodesToPlaylist(kodi, tvshow.tvshowid)
 							callback('Ok. Playing random episodes from '+tvshow.label)
 						}else{
-							//pulsar
-							var label = firstResult.title.split(/[ ]\(.*/)[0]
-							//kodi.Player.Open({item: {"file":"plugin://plugin.video.pulsar/show/"+TVDBID+"/season/<SEASON>/episode/<EPISODE>/play"}})
-							callback('Ok. Playing random episode from '+tvshow.label+' with pulsar.')
+							//quasar maybe?
+							callback("Sorry I coun't find that show.");
+							//var label = firstResult.title.split(/[ ]\(.*/)[0]
+							//kodi.Player.Open({item: {"file":"plugin://plugin.video.quasar/show/"+TVDBID+"/season/<SEASON>/episode/<EPISODE>/play"}})
+							//callback('Ok. Playing random episode from '+tvshow.label+' with quasar.')
 						}
 					})
 				}
 			})
 			.catch(function(e) {
-				callback("I can't seem to connect to Kodi.")
+				callback("I can't seem to connect to Kodi. Is it on?")
 			});
 		}
 	}
