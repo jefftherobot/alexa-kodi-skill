@@ -1,6 +1,9 @@
 //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#Examples
 //https://github.com/rsummers618/HTPC_Alexa_Skill
 //https://github.com/m0ngr31/kodi-alexa
+//https://github.com/makermusings/echo_kodi
+//http://www.makermusings.com/amazon-echo-utterance-expander/
+
 var movieController;
 var tvshowController;
 

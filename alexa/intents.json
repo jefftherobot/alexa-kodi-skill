@@ -1,9 +1,18 @@
 {
-	"intents": [{
-		"intent": "Movie",
-		"slots": [{
-			"name": "MovieTitle",
-			"type": "AMAZON.LITERAL"
-		}]
-	}]
+  "intents": [
+    {
+    "intent": "Movie",
+    "slots": [{
+      "name": "MovieTitle",
+      "type": "AMAZON.LITERAL"
+    }]
+    },
+    {
+    "intent": "Show",
+    "slots": [{
+      "name": "ShowTitle",
+      "type": "AMAZON.LITERAL"
+    }]
+    
+  }]
  }
