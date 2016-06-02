@@ -32,6 +32,12 @@ if (env !== 'production') {
 	};
 
 	https.createServer(httpsOptions, app).listen(443, function(){
-		console.log("Express server listening on port 443");
+		console.log("Express SSL server listening on port 443");
+	});
+
+	//For internal traffic
+
+	http.createServer(app).listen(3000,  function(){
+		console.log("Express server listening on port 3000");
 	});
 }
