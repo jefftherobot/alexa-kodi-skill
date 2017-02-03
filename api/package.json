@@ -20,6 +20,7 @@
     "wake_on_lan": "0.0.4"
   },
   "devDependencies": {
+    "kodi-ws": "^2.4.3",
     "node-monkey": "^0.2.16"
   }
 }

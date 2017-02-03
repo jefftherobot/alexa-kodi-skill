@@ -4,18 +4,16 @@ var fs = require('fs'),
     http = require('http'),
     https = require('https'),
     express = require("express"),
-    bodyParser = require('body-parser'),
-    Kodi = require('kodi-rpc');
+    bodyParser = require('body-parser');
 
 var env = process.env.NODE_ENV || 'development';
-var kodi = new Kodi(process.env.KODI_IP, process.env.KODI_PORT);
 
 var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var routes = require("./routes/routes.js")(app, kodi);
+var routes = require("./routes/routes.js")(app);
 
 if (env !== 'production') {
 

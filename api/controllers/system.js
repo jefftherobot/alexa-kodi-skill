@@ -21,17 +21,17 @@ var actions = {
 
 function wake_kodi(){
 	var mac = process.env.KODI_MAC;
-	
+
 	wol.wake(mac,{ address: '192.168.0.255'});
 }
 
 
-module.exports = function(kodi) {
+module.exports = function() {
 	return {
 		action: function(req, res) {
 			var action = req.params.action;
 			if(actions[action]){
-				actions[action](res, kodi);
+				actions[action](res);
 			}else{
 				res.json({ message: 'System command not found' });
 			}

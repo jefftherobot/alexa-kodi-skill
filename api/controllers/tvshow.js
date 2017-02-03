@@ -1,7 +1,7 @@
 var google = require('google')
 google.resultsPerPage = 5;
 
-function addEpisodesToPlaylist(kodi,id){
+function addEpisodesToPlaylist(id){
 		kodi.VideoLibrary.GetEpisodes({ 'tvshowid': id, 'limits': { 'start' : 0, 'end': 30 }, 'sort': { 'order': 'ascending', 'method': 'random'} })
 		.then(function(data) {
 
@@ -19,14 +19,14 @@ function addEpisodesToPlaylist(kodi,id){
 							console.log(items)
 						})
 					}
-					
+
 				})
 			})
 
 		})
 	}
 
-module.exports = function(kodi) {
+module.exports = function() {
 	return {
 		findByTitle: function(tvshowTitle, callback) {
 
@@ -49,7 +49,7 @@ module.exports = function(kodi) {
 
 
 				if(tvshow){
-					addEpisodesToPlaylist(kodi, tvshow.tvshowid)
+					addEpisodesToPlaylist(tvshow.tvshowid)
 					callback('Ok. Playing random episodes from '+tvshow.label)
 				}else{
 					//try google
@@ -67,7 +67,7 @@ module.exports = function(kodi) {
 						console.log(tvshow)
 
 						if(tvshow){
-							addEpisodesToPlaylist(kodi, tvshow.tvshowid)
+							addEpisodesToPlaylist(tvshow.tvshowid)
 							callback('Ok. Playing random episodes from '+tvshow.label)
 						}else{
 							//quasar maybe?
